@@ -70,12 +70,12 @@ const exportApplicant = async(req) =>{
     const { search, offset, pageSize } = paginationWithFromToAndSort(req.query.search, req.query.from, req.query.to);
     if (req.query.type == "raw") {
         const data = await models.sequelize.query(`
-        SELECT u.name,u.email,j.job_name,j.description FROM user u 
+        SELECT u.name,u.email,GROUP_CONCAT( j.job_name ) job FROM user u 
         INNER JOIN user_job uj
             ON uj.user_id = u.id 
         INNER JOIN job j
-            ON j.id = uj.job_id;
-
+            ON j.id = uj.job_id
+		group by u.id;
           `, {
             type: QueryTypes.SELECT
         })
@@ -88,7 +88,8 @@ const exportApplicant = async(req) =>{
             attributes: ['name', 'email'],
             include: [{
                 model: models.job,
-                attributes: ['job_name']
+                attributes: [ [sequelize.fn('GROUP_CONCAT', sequelize.col('job_name')), 'job']],
+                required:true
             }]
         })
         return { error: false, data }

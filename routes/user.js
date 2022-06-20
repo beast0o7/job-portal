@@ -30,4 +30,5 @@ route.delete('/delete/:id',checkAuth,checkPermission(1),errorWrap.wrapper(user.r
 
 
 
+
 module.exports = route;

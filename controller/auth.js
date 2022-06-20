@@ -26,6 +26,12 @@ exports.signIn = async (req, res) => {
         delete checkUser.dataValues.password;
         delete checkUser.dataValues.remember_token;
         delete checkUser.dataValues.forget_id;
+
+        await models.user_token.create({
+          user_id:checkUser.dataValues.id,
+          token:token
+        }); 
+
         return res.status(200).json({
           message: 'Authenticate Successfully',
           token: token,
@@ -36,3 +42,15 @@ exports.signIn = async (req, res) => {
       }
     }
   };
+
+exports.signOut = async(req,res) => {
+  const signOut = await models.user_token.destroy({
+      where: { user_id: req.userData.id }
+  });
+  if (signOut) {
+    return res.status(200).json({ message: "Successfully logged out" });
+
+  }
+
+}
+

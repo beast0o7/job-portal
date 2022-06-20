@@ -9,7 +9,15 @@ module.exports = async (req, res, next) => {
     } else {
         console.log(req.headers.authorization)
       let token = req.headers.authorization.split(' ')[1];
-      console.log(token)
+      const checkToken = await models.user_token.findOne({
+        where: {
+          token
+        }
+      });
+      console.log(checkToken);
+      if (!checkToken) {
+        return res.status(401).send({ message: 'Unauthorized' });
+      }
       const decode = jwt.verify(token, process.env.SECRET_KEY);
       let userDetails = await models.user.findOne({
         where: { id: decode.id },

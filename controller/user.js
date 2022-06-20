@@ -63,7 +63,7 @@ exports.exportCandidates = async(req,res)=>{
     const worksheet = workbook.addWorksheet('Candidates');
     worksheet.columns = [
         {header: 'S.no', key: 's_no', width: 4},
-        {header: 'Email', key: 'email', width: 15},
+        {header: 'Email', key: 'email', width: 20},
         {header: 'name', key: 'name', width: 10},
     ];
     let count = 1;
@@ -92,7 +92,7 @@ exports.exportRecruiter = async(req,res)=>{
     const worksheet = workbook.addWorksheet('Recruiter');
     worksheet.columns = [
         {header: 'S.no', key: 's_no', width: 4},
-        {header: 'Email', key: 'email', width: 15},
+        {header: 'Email', key: 'email', width: 20},
         {header: 'name', key: 'name', width: 10},
     ];
     let count = 1;
@@ -121,9 +121,9 @@ exports.exportApplicant =  async(req,res)=>{
     const worksheet = workbook.addWorksheet('Applicants');
     worksheet.columns = [
         {header: 'S.no', key: 's_no', width: 4},
-        {header: 'Email', key: 'email', width: 15},
+        {header: 'Email', key: 'email', width: 20},
         {header: 'Name', key: 'name', width: 10},
-        {header: 'Job', key: 'jobs', width: 10},
+        {header: 'Jobs', key: 'job', width: 20},
     ];
     let count = 1;
     applicants.data.forEach(user => {
@@ -200,3 +200,20 @@ exports.removeUser = async (req, res) => {
         result
     });
 }
+
+exports.removeUser = async (req, res) => {
+    const { id } = req.params;
+
+    const result = await service.removeUser(id);
+
+    if (result.err) {
+        return res.status(400).json({
+            err:result.err
+        });
+    }
+    res.status(201).json({
+        msg:"User deleted successfully",
+        result
+    });
+}
+

@@ -18,17 +18,10 @@ route.get('/candidates-job', checkAuth,checkPermission(1),errorWrap.wrapper(job.
 
 route.post('/',checkAuth,checkPermission(2),errorWrap.wrapper(job.createJob))
 
-route.post('/apply-job/:jobId',checkPermission(3),checkAuth,errorWrap.wrapper(job.applyJob))
+route.post('/apply-job/:jobId',checkAuth,checkPermission(3),errorWrap.wrapper(job.applyJob))
 
 route.delete('/delete/:id',checkAuth,checkPermission(1),errorWrap.wrapper(job.deleteJob))
 
-
-
-// route.post('/forgot-password',errorWrap.wrapper(user.forgotPassword));
-
-// route.put('/reset-password',errorWrap.wrapper(user.resetPassword));
-
-// route.get('/',checkAuth,errorWrap.wrapper(user.getUsers));
 
 
 module.exports = route;
