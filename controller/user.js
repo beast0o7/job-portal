@@ -42,12 +42,16 @@ exports.addRecruiter = async (req, res) => {
 
 
 exports.getUsers = async(req,res)=>{
-    const users =await service.getUsers();
+    const users = await service.getUsers(req);
     if (!users.length) {
         return res.status(404).json({
             msg: "No user not found"
         });
     }
+    res.status(200).json({
+        msg:"Success",
+        users
+    });
 }
 
 exports.exportCandidates = async(req,res)=>{

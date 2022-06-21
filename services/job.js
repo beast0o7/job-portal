@@ -6,6 +6,8 @@ const moment = require('moment');
 const { QueryTypes } = require("sequelize");
 const { sendEmail } = require('../utils/sendMail')
 const { paginationWithFromToAndSort } = require('../utils/pagination')
+const redisClient = require('../utils/redis')
+
 
 
 exports.createJob = async (req, res) => {
@@ -205,6 +207,13 @@ exports.getAllApplicantForJob = async (req) => {
         const { search, offset, pageSize } = paginationWithFromToAndSort(req.query.search, req.query.from, req.query.to);
         const userId = req.userData.id;
 
+        const allApplicant = await redisClient.get('data')
+        if (allApplicant) {
+            console.log("from redis....",allApplicant)
+            return JSON.parse(allApplicant)
+        }
+        
+    
 
         if (req.query.type == "raw") {
             const data = await models.sequelize.query(`
@@ -217,6 +226,7 @@ exports.getAllApplicantForJob = async (req) => {
           `, {
                 type: QueryTypes.SELECT
             })
+            await redisClient.setEx('data', 60, JSON.stringify(data));
             return {error:false,data}
 
         } else {
@@ -230,12 +240,20 @@ exports.getAllApplicantForJob = async (req) => {
                     attributes:['name','email']
                 }]
             })
+            await redisClient.setEx('data', 60, JSON.stringify(data));
             return {error:false,data}
         }
     }
 
     exports.getAllCandidatesWithJobs = async (req) => {
         const { search, offset, pageSize } = paginationWithFromToAndSort(req.query.search, req.query.from, req.query.to);
+        
+        const allApplicant = await redisClient.get('data')
+        if (allApplicant) {
+            console.log("from redis....",allApplicant)
+            return JSON.parse(allApplicant)
+        }
+        
         if (req.query.type == "raw") {
             const data = await models.sequelize.query(`
             SELECT u.name,u.email,j.job_name,j.description FROM user u 
@@ -247,6 +265,7 @@ exports.getAllApplicantForJob = async (req) => {
               `, {
                 type: QueryTypes.SELECT
             })
+            await redisClient.setEx('data', 60, JSON.stringify(data));
             return { error: false, data }
     
         } else {
@@ -259,6 +278,7 @@ exports.getAllApplicantForJob = async (req) => {
                     attributes: ['job_name', 'description']
                 }]
             })
+            await redisClient.setEx('data', 60, JSON.stringify(data));
             return { error: false, data }
         }
     }

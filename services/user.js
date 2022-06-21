@@ -6,7 +6,7 @@ const Sequelize = models.Sequelize
 const Op = Sequelize.Op;
 const {paginationWithFromToAndSort} = require('../utils/pagination')
 const { QueryTypes } = require("sequelize");
-
+const redisClient = require('../utils/redis')
 
 
 const emailUsed = async (email) => {
@@ -39,15 +39,39 @@ const addRecruiter = async (email, password, name) => {
     return recruiter;
 }
 
-const getUsers = async () => {
+const getUsers = async (req) => {
     const { search, offset, pageSize } = paginationWithFromToAndSort(
         req.query.search, req.query.from, req.query.to);
+    
+    if (!req.query.from || !req.query.to) {
+        const userRedis = await redisClient.get('users')
+    if (userRedis) {
+        console.log("from redis....",userRedis)
+        return JSON.parse(userRedis)
+    }
+    }
+
+
+    if(req.query.type = "raw"){
+    const users = await models.sequelize.query(`
+    SELECT u.name,u.email FROM user u
+    limit ${pageSize}
+    offset ${offset}
+      `, {
+        type: QueryTypes.SELECT
+    })
+    await redisClient.setEx('users', 60, JSON.stringify(users));
+    return users
+
+    }else{
     const users = await models.user.findAll({
         limit: pageSize,
         offset: offset,
-        attributes:['name','email']
-    })
+        attributes:['name','email'],
+    });
+     await redisClient.setEx('users', 60, JSON.stringify(users));
     return users
+}
 } 
 
 const exportCandidates = async () => {

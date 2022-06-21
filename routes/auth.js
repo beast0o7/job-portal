@@ -13,3 +13,31 @@ route.post('/sign-out',checkAuth,errorWrap.wrapper(auth.signOut));
 
 
 module.exports = route;
+/**
+ * @swagger
+* /api/auth/sign-in:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Logged in successfull
+ *       404:
+ *         description: User not found
+ */
+/**
+ *    /api/auth/sign-out:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Logged out successfull
+ *       404:
+ *         description: User not found
+ */
+
