@@ -205,19 +205,19 @@ exports.removeUser = async (req, res) => {
     });
 }
 
-exports.removeUser = async (req, res) => {
-    const { id } = req.params;
+// exports.removeUser = async (req, res) => {
+//     const { id } = req.params;
 
-    const result = await service.removeUser(id);
+//     const result = await service.removeUser(id);
 
-    if (result.err) {
-        return res.status(400).json({
-            err:result.err
-        });
-    }
-    res.status(201).json({
-        msg:"User deleted successfully",
-        result
-    });
-}
+//     if (result.err) {
+//         return res.status(400).json({
+//             err:result.err
+//         });
+//     }
+//     res.status(201).json({
+//         msg:"User deleted successfully",
+//         result
+//     });
+// }
 

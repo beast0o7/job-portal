@@ -25,3 +25,28 @@ route.delete('/delete/:id',checkAuth,checkPermission(1),errorWrap.wrapper(job.de
 
 
 module.exports = route;
+
+/**
+* @swagger
+* /job/apply-job/{jobId}:
+*   post:
+*     security:          
+*       - bearerAuth: []
+*     tags:
+*       - apply jobs
+*     summary: to apply for jobs
+*     parameters:
+*       - name: "jobId"
+*         in: "path"
+*         description: "ID of job"
+*         required: true
+*         type: "integer"
+*     consumes:
+*       - application/json
+
+*     responses:
+*       200:
+*         description: Applied to job
+*       404:
+*         description: You have already applied for this job
+ */

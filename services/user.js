@@ -25,6 +25,7 @@ const userSignUp = async (email, password, name) => {
         role_id:3
     }
     )
+    delete user.dataValues.password;
     return user;
 }
 
@@ -36,6 +37,7 @@ const addRecruiter = async (email, password, name) => {
         role_id:2
     }
     )
+    delete user.dataValues.password;
     return recruiter;
 }
 

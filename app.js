@@ -15,15 +15,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 const swaggerOptions = {
  swaggerDefinition:{
-    info:{
-        title:'Job portal',
-        description:'job portal api test',
-        contact:{
-            name:'mahad'
-        },
-        servers:['http://localhost:9000']
-    }
+  info: {
+    swagger: '1.0',
+    title: 'JOB PORTAL',
+    description: 'Job Portal APIs',
+  },
+  basePath: '/api',
+  securityDefinitions: {
+    bearerAuth: {
+      type: 'apiKey',
+      name: 'Authorization',
+      scheme: 'bearer',
+      in: 'header',
+    },
+  },
  },
+ 
  apis:['./routes/*.js']
 };
 
